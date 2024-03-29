@@ -2,7 +2,7 @@ import {Sequelize} from "sequelize";
 import { configExtranetDB} from "./db-config.js";
 
 const sequelizeExtranet = new Sequelize(configExtranetDB.DB, configExtranetDB.USER, configExtranetDB.PASSWORD, {
-    host: "127.0.0.1",
+    host: configExtranetDB.HOST,
     dialect: "mysql",
     port: 3306,
     pool: {
