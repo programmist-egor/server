@@ -44,7 +44,7 @@ server.timeout = 12000000;
 const PORT = process.env.NODE_LOCAL_PORT_YOOKING || 5002;
 
 // Настройка статических файлов React
-const buildPath = path.resolve(__dirname, "/client/build"); // Путь к папке сборки React приложения
+const buildPath = path.resolve(__dirname, "client/build"); // Путь к папке сборки React приложения
 app.use(express.static(buildPath)); // Обслуживаем статические файлы React
 
 app.get("*", (req, res) => {
