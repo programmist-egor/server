@@ -43,7 +43,7 @@ app.use(errorMiddlewares);
 const server = http.createServer(app);
 server.timeout = 12000000;
 
-const PORT = process.env.PORT || 5002;
+const PORT = process.env.NODE_LOCAL_PORT_YOOKING || 5002;
 
 // Настройка статических файлов React
 const buildPath = path.resolve(__dirname, "build"); // Путь к папке сборки React приложения
