@@ -5,7 +5,7 @@ export const configExtranetDB = {
     DB: process.env.EXTRANETDB,
     USER: process.env.USEREXTRANET,
     PASSWORD: "rDT5NLbc2&oE*",
-    HOST: process.env.HOST,
+    HOST: "localhost",
     DB_PORT: process.env.DB_PORT,
     pool: {
         max: 10,
