@@ -1,7 +1,6 @@
 import BookingExtranet from "../models/booking-extranet-model.js";
 import ApiError from "../exceptions/api-error.js";
 import NumberExtranet from "../models/numbers-model.js";
-import UsersYooking from "../models/users-yooking-model.js";
 
 
 class BookingService {
@@ -27,11 +26,10 @@ class BookingService {
         }
         return data
     }
-    async createBooking(numberId, dataBooking, dataNumber, updateUser, userId) {
+    async createBooking(numberId, data, dataNumber) {
         try {
-            await BookingExtranet.create(dataBooking);
+            await BookingExtranet.create(data);
             await NumberExtranet.update(dataNumber, {where: {id: numberId}});
-            await UsersYooking.update(updateUser, {where: {id: userId}});
               console.log("Бронирование успешно создано");
             return true
         } catch (error) {
@@ -51,19 +49,9 @@ class BookingService {
             return false; // Возвращаем false при ошибке
         }
     }
-    async deleteBooking(id, dataNumber, numberId, userId, userUpdate) {
-        try {
-            await BookingExtranet.destroy({ where: { id: id } });
-            await NumberExtranet.update(dataNumber, { where: { id: numberId } });
-            await UsersYooking.update(userUpdate, { where: { id: userId } });
-
-            // Возвращаем успешный результат
-            return { success: true, message: "Booking deleted successfully." };
-        } catch (error) {
-            // Обрабатываем ошибку и возвращаем сообщение об ошибке
-            console.error("Error deleting booking:", error);
-            return { success: false, message: "Error deleting booking." };
-        }
+    async deleteBooking(id, dataNumber, numberId) {
+        await BookingExtranet.destroy( { where: { id: id } });
+        await NumberExtranet.update(dataNumber, {where: {id: numberId}});
     }
 }
 

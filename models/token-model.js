@@ -1,9 +1,9 @@
 // Token Model
 import { DataTypes } from 'sequelize';
 import { sequelizeExtranet } from '../config/db-connect.js';
-import UsersYooking from "./users-yooking-model.js";
+import UsersExtranet from "./users-extranet-model.js";
 
-const TokenModel = sequelizeExtranet.define('Token-Model-Yooking', {
+const TokenModel = sequelizeExtranet.define('Token-Model-Extranet', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -19,7 +19,7 @@ const TokenModel = sequelizeExtranet.define('Token-Model-Yooking', {
     }
 });
 
-TokenModel.belongsTo(UsersYooking, { foreignKey: 'idTable' });
+TokenModel.belongsTo(UsersExtranet, { foreignKey: 'idTable' });
 // Указываем, что внешний ключ 'userId' модели TokenModelExtranet соответствует полю 'id' модели Users-Extranet
 
 export default TokenModel;

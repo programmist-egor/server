@@ -34,11 +34,11 @@ class BookingController {
     }
     async createBooking(req, res, next) {
         try {
-            const {numberId, dataBooking, dataNumber,userId, updateUser } = req.body;
-            if (!numberId && !dataBooking && !dataNumber && !updateUser && !userId) {
+            const {numberId, data, dataNumber} = req.body;
+            if (!numberId && !data && !dataNumber) {
                 return new ApiError.BadRequest("Некорректные данные")
             }
-          const result =  await BookingService.createBooking( numberId, dataBooking, dataNumber, updateUser, userId)
+          const result =  await BookingService.createBooking( numberId, data, dataNumber)
             res.json(result)
         } catch (error) {
             next(error);
@@ -51,8 +51,8 @@ class BookingController {
             if (!id && !data && !numberId && !dataNumber) {
                 return new ApiError.BadRequest("Некорректные данные")
             }
-           const result = await BookingService.updateBooking(id, data, numberId, dataNumber)
-            res.json(result)
+           const res = await BookingService.updateBooking(id, data, numberId, dataNumber)
+            res.json(res)
         } catch (error) {
             next(error);
         }
@@ -61,16 +61,12 @@ class BookingController {
     async deleteBooking(req, res, next) {
         try {
             const id = req.params.id
-            const {numberId, dataNumber, userId, userUpdate} = req.body;
-            console.log("numberId",numberId)
-            console.log("dataNumber",dataNumber)
-            console.log("userId",userId)
-            console.log("updateUser",userUpdate)
-            if (!id && !numberId && !dataNumber && !userId && !userUpdate) {
+            const {numberId, dataNumber} = req.body;
+            if (!id && !numberId && !dataNumber) {
                 return new ApiError.BadRequest("Некорректные данные")
             }
-            const result =  await BookingService.deleteBooking(id, dataNumber, numberId, userId, userUpdate)
-            res.json(result)
+            const res =  await BookingService.deleteBooking(id, dataNumber, numberId)
+            res.json(res)
         } catch (error) {
             next(error);
         }

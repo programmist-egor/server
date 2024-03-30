@@ -1,12 +1,11 @@
+import bcrypt from 'bcrypt'
 import {v4 as uuidv4} from 'uuid';
 import MailService from "./mail-service.js";
-import SimpleCrypt  from "simplecrypt"
 import TokenService from "./token-service.js";
+import UsersExtranet from "../models/users-extranet-model.js";
 import ApiError from "../exceptions/api-error.js";
 import UserDtos from "../dtos/user-dtos.js";
 import dotenv from "dotenv";
-import UsersYooking from "../models/users-yooking-model.js";
-const sc = new SimpleCrypt();
 
 dotenv.config()
 
@@ -15,19 +14,19 @@ class UserService {
         try {
             const { email, phone, password } = newUser;
 
-            const candidate = await UsersYooking.findOne({ where: { email } });
+            const candidate = await UsersExtranet.findOne({ where: { email } });
             console.log("candidate", candidate);
             if (candidate) {
                 throw new Error(`Пользователь с почтовым адресом ${email} уже существует`);
             }
 
-            const phoneUser = await UsersYooking.findOne({ where: { phone } });
+            const phoneUser = await UsersExtranet.findOne({ where: { phone } });
             console.log("phoneUser", phoneUser);
             if (phoneUser) {
                 throw new Error(`Пользователь с таким номером ${phone} уже существует`);
             }
 
-            const hashPassword = sc.encrypt(password);
+            const hashPassword = await bcrypt.hash(password, 3);
             const activationLink = uuidv4();
             const dataUser = {
                 ...newUser,
@@ -37,15 +36,20 @@ class UserService {
                 activationLink
             };
 
-            const user = await UsersYooking.create(dataUser);
+            const user = await UsersExtranet.create(dataUser);
             const userSaveToDtos = {
                 id: user.id,
                 email: user.email,
                 phone: user.phone,
                 isActivated: user.isActivated,
+                role: user.role
             };
 
-            // Отправка письма активации
+            // try {
+            //     await MailService.sendActivationMail(email, `${process.env.API_SERVER}/api/active/${activationLink}`);
+            // } catch (mailError) {
+            //     throw new Error(`Ошибка отправки письма активации: ${mailError.message}`);
+            // }
 
             const userDto = new UserDtos(userSaveToDtos);
             const tokens = TokenService.generateTokens({ ...userDto });
@@ -64,33 +68,30 @@ class UserService {
     }
 
     async login(email, password) {
-        const user = await UsersYooking.findOne({ where: { email } });
-        console.log("user", user);
+        const user = await UsersExtranet.findOne({where: {email}});
         if (!user) {
-            throw new ApiError.BadRequest("Пользователь с таким email не найден");
+            throw new ApiError.BadRequest("Пользователь с таким email не найден")
         }
-
-        const isPasswordValid = sc.decrypt(user.password) === password;
-        console.log("isPasswordValid", isPasswordValid);
+        const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-            throw new ApiError.BadRequest("Неверный пароль");
+            throw new ApiError.BadRequest("Неверный пароль")
         }
-
         const userSaveToDtos = {
             id: user.id,
             email: user.email,
             phone: user.phone,
             isActivated: user.isActivated,
-        };
-        const userDto = new UserDtos(userSaveToDtos);
-        const tokens = TokenService.generateTokens({ ...userDto });
-        await TokenService.saveToken(userDto.id, tokens.refreshToken);
+            role: user.role
+        }
+        const userDto = new UserDtos(userSaveToDtos)
+        const tokens = TokenService.generateTokens({...userDto})
+        await TokenService.saveToken(userDto.id, tokens.refreshToken)
 
-        return { ...tokens, user: userDto };
+        return {...tokens, user: userDto}
     }
 
     async activate(activationLink) {
-        const user = await UsersYooking.findOne({where: {activationLink}});
+        const user = await UsersExtranet.findOne({where: {activationLink}});
         if (!user) {
             throw new ApiError.BadRequest("Некорректная ссылка активации")
         }
@@ -111,12 +112,13 @@ class UserService {
         if (!userData || !tokenFromDB) {
             throw new ApiError.UnauthorizedError()
         }
-        const user = await UsersYooking.findOne({where: {id: userData.id}});
+        const user = await UsersExtranet.findOne({where: {id: userData.id}});
         const userSaveToDtos = {
             id: user.id,
             email: user.email,
             phone: user.phone,
             isActivated: user.isActivated,
+            role: user.role
         }
         const userDto = new UserDtos(userSaveToDtos)
         const tokens = TokenService.generateTokens({...userDto})

@@ -4,8 +4,6 @@ import CategoryNumbersExtranet from "../models/category-number-extranet-model.js
 import PhotoObjectExtranet from "../models/photo-object-extranet-model.js";
 import PhotoNumberObjectExtranet from "../models/photo-number-object-model.js";
 import NumberExtranet from "../models/numbers-model.js";
-import {parseJSONPropertiesInArray} from "../utils/json-parse-object.js";
-import {literal, Op} from "sequelize";
 
 
 
@@ -29,14 +27,12 @@ class ObjectService {
             return result
         }
     }
-    async searchObject(requestParameters) {
-        const { city } = requestParameters;
+    async createObject(dataObjectSetting) {
         try {
-            const resultObject= await ObjectsExtranet.findAll({where: {city: city.city}});
-            const resultNumbers = await NumberExtranet.findAll({where: {city: city.city}});
-            return {resultObject, resultNumbers}; // Возвращаем найденные номера, которые не попадают в диапазон
+            const newObject = await ObjectsExtranet.create(dataObjectSetting);
+            return newObject;
         } catch (error) {
-            console.error("Ошибка при поиске номера:", error);
+            console.error("Ошибка при создании объекта:", error);
             throw new Error("Ошибка при создании объекта");
         }
     }

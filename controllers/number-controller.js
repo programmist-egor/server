@@ -15,18 +15,6 @@ class NumberController {
             next(error);
         }
     }
-    async getAllHotelIdNumbers(req, res, next) {
-        try {
-            const {hotelIds} = req.body;
-            if (!hotelIds) {
-                return new ApiError.BadRequest("Некорректные данные")
-            }
-            const data = await NumberService.getAllHotelIdNumbers(hotelIds)
-            res.json(data)
-        } catch (error) {
-            next(error);
-        }
-    }
     async getNumberById(req, res, next) {
         try {
             const numberId = req.params.numberId;

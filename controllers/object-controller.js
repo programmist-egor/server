@@ -34,13 +34,13 @@ class ObjectController {
             next(error);
         }
     }
-    async searchObject(req, res, next) {
+    async createObject(req, res, next) {
         try {
-            const {requestParameters} = req.body
-            if(!requestParameters) {
+            const {newObject} = req.body
+            if(!newObject) {
                 return new ApiError.BadRequest("Некорректные данные")
             }
-           const data = await ObjectService.searchObject( requestParameters)
+           const data = await ObjectService.createObject( newObject)
             res.json(data)
         } catch (error) {
             next(error);

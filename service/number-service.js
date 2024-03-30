@@ -12,10 +12,7 @@ class NumberService {
             return null
         }
     }
-    async getAllHotelIdNumbers(hotelIds) {
-        const result = await NumberExtranet.findAll({ where: { hotelId: hotelIds } });
-        return result;
-    }
+
     async getNumberById(numberId) {
         const result = await NumberExtranet.findOne({where: {id: numberId}});
         if (result) {

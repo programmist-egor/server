@@ -4,9 +4,8 @@ import PhotosObjectService from "../service/photos-object-service.js";
 
 class PhotosObjectController {
     async getAllPhotosObject(req, res, next) {
-        const hotelId = req.params.hotelId;
-        console.log("hotelId PHOTOS",hotelId);
         try {
+            const hotelId = req.params.hotelId;
             if (!hotelId) {
                 return new ApiError.BadRequest("Некорректные данные")
             }

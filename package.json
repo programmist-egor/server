@@ -1,15 +1,13 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "dev": "nodemon index.js"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cookie-parse": "^0.4.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -23,7 +21,6 @@
     "nodemon": "^3.0.1",
     "redis": "^4.6.10",
     "sequelize": "^6.35.1",
-    "simplecrypt": "^0.1.0",
     "uuid": "^9.0.1"
   }
 }
