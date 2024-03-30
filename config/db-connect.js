@@ -2,9 +2,9 @@ import {Sequelize} from "sequelize";
 import { configExtranetDB} from "./db-config.js";
 
 const sequelizeExtranet = new Sequelize(configExtranetDB.DB, configExtranetDB.USER, configExtranetDB.PASSWORD, {
-    host: "localhost",
+    host: configExtranetDB.HOST,
     dialect: "mysql",
-    port: 3306,
+    port: configExtranetDB.DB_PORT,
     pool: {
         max: configExtranetDB.pool.max,
         min: configExtranetDB.pool.min,

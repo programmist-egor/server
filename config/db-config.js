@@ -4,8 +4,8 @@ dotenv.config()
 export const configExtranetDB = {
     DB: process.env.EXTRANETDB,
     USER: process.env.USEREXTRANET,
-    PASSWORD: "Pasaremos999*",
-    HOST: "flumutogi.beget.app",
+    PASSWORD: process.env.PASSWORD,
+    HOST: process.env.HOST,
     DB_PORT: process.env.DB_PORT,
     pool: {
         max: 10,
